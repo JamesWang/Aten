@@ -35,10 +35,10 @@ public interface Packetizer {
      * 
      * @throws IOException
      * @throws SocketTimeoutException
-     * @throws InvalidPacketDataException
+     * @throws InvalidDataException
      */
     byte[] readPacket(InputStream in) throws IOException,
-            SocketTimeoutException, InvalidPacketDataException;
+            SocketTimeoutException, InvalidDataException;
 
     /**
      * Write out the binary data into the OutputStream.

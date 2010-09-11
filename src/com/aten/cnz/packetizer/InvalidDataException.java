@@ -22,18 +22,18 @@ package com.aten.cnz.packetizer;
  * @author Jianjun Wang
  * 
  */
-public class InvalidPacketDataException extends Exception {
+public class InvalidDataException extends Exception {
 
     private static final long serialVersionUID = -581355395751763544L;
 
-    public InvalidPacketDataException() {
+    public InvalidDataException() {
     }
 
-    public InvalidPacketDataException(String mesg) {
-        super(mesg);
+    public InvalidDataException(String message) {
+        super(message);
     }
 
-    public InvalidPacketDataException(Exception e) {
+    public InvalidDataException(Exception e) {
         super(e);
     }
 }

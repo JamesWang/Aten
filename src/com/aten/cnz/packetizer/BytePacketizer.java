@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketTimeoutException;
 
-import com.aten.cnz.packetizer.codec.LengthCodec;
+import com.aten.cnz.packetizer.codec.HeaderLengthCodec;
 
 /**
  * Read/Write packets with n-bytes header from/to InputStream/OutputStream.
@@ -41,7 +41,7 @@ public class BytePacketizer implements Packetizer {
      * bytes header into a binary format or vice-versa
      * 
      */
-    private LengthCodec framer;
+    private HeaderLengthCodec codec;
 
     public BytePacketizer() {
 	init();
@@ -64,21 +64,21 @@ public class BytePacketizer implements Packetizer {
      */
     @Override
     public byte[] readPacket(InputStream in) throws IOException,
-	    SocketTimeoutException, InvalidPacketDataException {
+	    SocketTimeoutException, InvalidDataException {
 
 	byte[] header = new byte[headerLength];
 
 	int size = in.read(header, 0, headerLength);
 
 	if (size < 0 || size < headerLength) {
-	    throw new IOException("Connection Closed");
+	    throw new IOException("InputStream Closed");
 	}
 
-	int len = framer.decode(header);
+	int len = codec.decode(header);
 	byte[] data = new byte[len];
 	size = in.read(data, 0, len);
 	if (size < 0 || size < len) {
-	    throw new IOException("Connection Closed");
+	    throw new IOException("InputStream Closed");
 	}
 	return data;
     }
@@ -86,12 +86,10 @@ public class BytePacketizer implements Packetizer {
     /**
      * Write transaction data from InputStream in blocking mode
      * 
-     * @param data
-     *            to be written out
+     * @param data   to be written out
      * @param OutputStream
      * @return
-     * @throws IOException
-     *             if write to OutputStream failed
+     * @throws IOException if write to OutputStream failed
      */
     @Override
     public void writePacket(byte[] data, OutputStream out) throws IOException {
@@ -100,7 +98,7 @@ public class BytePacketizer implements Packetizer {
 	    throw new IOException("Invalid Data");
 	}
 
-	byte[] header = framer.encode(data.length);
+	byte[] header = codec.encode(data.length);
 
 	out.write(header);
 	out.write(data);
@@ -119,9 +117,10 @@ public class BytePacketizer implements Packetizer {
 
     @Override
     public void close() {
+	//TODO
     }
 
     private void init() {
-	framer = new LengthCodec(headerLength);
+	codec = new HeaderLengthCodec(headerLength);
     }
 }

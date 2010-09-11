@@ -25,10 +25,10 @@ public interface PacketizerFactory {
      * Return a Packetizer instance or create one if it doesn't exist
      * @return An instance of Paketizer
      */
-    Packetizer getPacketizer();
+    Packetizer produce();
 
     /**
      * Initialize the PacketizerFactory
      */
-    void init();
+    void initialize();
 }

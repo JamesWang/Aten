@@ -15,71 +15,69 @@
 
 package com.aten.cnz.packetizer.codec;
 
-import com.aten.cnz.packetizer.InvalidPacketDataException;
+import com.aten.cnz.packetizer.InvalidDataException;
 
 /**
  * An encoder that prepends the length of the message. The length value is
  * prepended as a binary form. For example, <tt>{@link LengthFramer}</tt> will
  * encode the following 12-bytes string:
  * 
- * <pre>
  * +----------------+
- * | "HELLO, WORLD" |
+ * | "Good Morning" |
  * +----------------+
- * </pre>
  * 
  * into the following:
  * 
- * <pre>
  * +--------+----------------+
- * + 0x000C | "HELLO, WORLD" |
+ * + 0x000C | "Good Morning" |
  * +--------+----------------+
  * 
  * @author Jianjun Wang
  * 
  */
-public class LengthCodec {
+public class HeaderLengthCodec {
 
     private int headerLength;
 
-    public LengthCodec(int headerLength) {
-	
+    public HeaderLengthCodec(int headerLength) {
+
 	this.headerLength = headerLength;
-	
+
 	if (headerLength < 0) {
-	    throw new IllegalArgumentException("HeaderLength must be a positive integer: " + headerLength);
+	    throw new IllegalArgumentException(
+		    "HeaderLength must be a positive integer: " + headerLength);
 	}
-	if (headerLength != 1 && 
-	    headerLength != 2 && 
-	    headerLength != 3 && 
-	    headerLength != 4 && 
-	    headerLength != 8) {
-	    throw new IllegalArgumentException("HeaderLength must be either 1, 2, 3, 4, or 8: " + headerLength);
+	if (headerLength != 1 && headerLength != 2 && headerLength != 3
+		&& headerLength != 4 && headerLength != 8) {
+	    throw new IllegalArgumentException(
+		    "HeaderLength must be either 1, 2, 3, 4, or 8: "
+			    + headerLength);
 	}
     }
 
     /**
      * Parse the length stored in the header ( data )
      * 
-     * @param data - byte array packet
+     * @param data
+     *            - byte array packet
      * @return Length of the data packet
-     * @throws InvalidPacketDataException
+     * @throws InvalidDataException
      *             if the length of the packet is not valid
      */
-    public int decode(byte[] data) throws InvalidPacketDataException {
-	
+    public int decode(byte[] data) throws InvalidDataException {
+
 	int len = data == null ? 0 : data.length;
-	
+
 	if (len >= headerLength) {
 	    int total = 0;
 	    for (int i = 0; i < headerLength; i++) {
-		total = (total << 8) + (data[i] & 0xff);
+		total = (total << 8) + (data[i] & 0xFF);
 	    }
 	    if (total > len) {
 		return total;
 	    }
 	}
-	throw new InvalidPacketDataException("Packet is too short");
+	throw new InvalidDataException("Data is too short");
     }
 
     /**
@@ -93,17 +91,17 @@ public class LengthCodec {
     public byte[] encode(int length) {
 	switch (headerLength) {
 	case 1:
-	    if (length >= 256) {
+	    if (length > 0xFF) {
 		invalidLength(length);
 	    }
 	    break;
 	case 2:
-	    if (length >= 65536) {
+	    if (length > 0xFFFF) {
 		invalidLength(length);
 	    }
 	    break;
 	case 3:
-	    if (length >= 16777216) {
+	    if (length > 0xFFFFFF) {
 		invalidLength(length);
 	    }
 	    break;

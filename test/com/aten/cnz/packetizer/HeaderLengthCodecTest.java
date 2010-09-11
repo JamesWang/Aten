@@ -14,7 +14,7 @@
  */
 package com.aten.cnz.packetizer;
 
-import com.aten.cnz.packetizer.codec.LengthCodec;
+import com.aten.cnz.packetizer.codec.HeaderLengthCodec;
 
 
 
@@ -22,10 +22,10 @@ import com.aten.cnz.packetizer.codec.LengthCodec;
  * @author Jianjun Wang
  *
  */
-public class LengthCodecTest {
-    private LengthCodec codec = new LengthCodec(2);
+public class HeaderLengthCodecTest {
+    private HeaderLengthCodec codec = new HeaderLengthCodec(2);
     @Test
-    public void encode() throws InvalidPacketDataException{
+    public void encode() throws InvalidDataException{
 	byte[] value = new byte[] {(byte)136};
 	byte[] bs = codec.encode(136);		
 	assertTrue( bs[0] == 0 );
@@ -42,7 +42,7 @@ public class LengthCodecTest {
 	int len = 0;
 	try {
 	    len = codec.decode( value );
-	} catch (InvalidPacketDataException e) {
+	} catch (InvalidDataException e) {
 	    e.printStackTrace();
 	}
 	assertTrue( len ==  271);

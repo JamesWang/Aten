@@ -19,7 +19,7 @@ package com.aten.cnz.packetizer;
  * @author Jianjun Wang
  * 
  */
-public class SingletonBytesPacketizerFactory implements PacketizerFactory {
+public class SingletonBytePacketizerFactory implements PacketizerFactory {
     
     private int headerLength = 2;
     /**
@@ -28,12 +28,12 @@ public class SingletonBytesPacketizerFactory implements PacketizerFactory {
      */
     private Packetizer instance ;
     
-    public SingletonBytesPacketizerFactory(){
+    public SingletonBytePacketizerFactory(){
     }
     
-    public SingletonBytesPacketizerFactory( int headerLength ){
+    public SingletonBytePacketizerFactory( int headerLength ){
         this.headerLength = headerLength;
-        init();
+        initialize();
     }
 
     public void setHeaderLength(int headerLength) {
@@ -41,12 +41,12 @@ public class SingletonBytesPacketizerFactory implements PacketizerFactory {
     }
 
     @Override
-    public Packetizer getPacketizer() {
+    public Packetizer produce() {
         return instance;
     }
 
     @Override
-    public synchronized void init() {
+    public synchronized void initialize() {
         if( instance == null ){
             instance = new BytePacketizer( headerLength );
         }
