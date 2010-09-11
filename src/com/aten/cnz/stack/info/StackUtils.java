@@ -63,11 +63,12 @@ public class StackUtils {
 	StackTraceElement ste = new Throwable().getStackTrace()[1];
 
 	String callerClassName = ste.getClassName();
-	int callerLineNumber = ste.getLineNumber();
+	int callerLineNumber   = ste.getLineNumber();
+	String methodName      = ste.getMethodName();
 	callerClassName = callerClassName.substring(callerClassName
 		.lastIndexOf(".") + 1);
 
-	return "[" + callerClassName + ":" + callerLineNumber + "]" + message;
+	return "[" + callerClassName +"." + methodName + ":" + callerLineNumber + "]" + message;
     }
 
     /**
